@@ -1,0 +1,4 @@
+#ifndef GUIBUILDER_H
+#define GUIBUILDER_H
+
+#endif //GUIBUILDER_H
