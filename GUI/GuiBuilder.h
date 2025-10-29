@@ -1,6 +1,7 @@
 #ifndef GUIBUILDER_H
 #define GUIBUILDER_H
 
+#include <imgui.h>
 #include <iostream>
 #include "GLFW/glfw3.h"
 
@@ -11,8 +12,9 @@ private:
     int width, height;
     string title, hexColor, rgbColor;
     GLFWwindow* window;
+    ImGuiWindowFlags window_flags;
 
-    void imguiInit() const;
+    void imguiInit();
     void CreateMainView() const;
     void RenderFrame() const;
     void ShutdownGui();
