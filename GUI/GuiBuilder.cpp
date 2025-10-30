@@ -1,6 +1,5 @@
 #include <iostream>
 #include "GuiBuilder.h"
-
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -12,19 +11,32 @@ GuiBuilder::GuiBuilder(int width, int height) : width(width), height(height) {
     rgbColor = "rgb(XXX, XXX, XXX)";
     window = nullptr;
     window_flags = 0;
+    xScale = 1;
+    yScale = 1;
+}
+
+void GuiBuilder::SetScales() {
+    glfwGetWindowContentScale(window, &xScale, &yScale);
+    if (xScale < 1.0f) xScale = 1.0f;
+    if (yScale < 1.0f) yScale = 1.0f;
+
 }
 
 void GuiBuilder::imguiInit() {
     ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.ScaleAllSizes(xScale);
     window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
-
+    io.FontGlobalScale = xScale;
 }
 
 void GuiBuilder::CreateMainView() const {
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
     ImGui::Begin(title.c_str(), nullptr, window_flags);
     if (ImGui::Button("Test button")) {}
     ImGui::End();
@@ -50,14 +62,15 @@ void GuiBuilder::WindowInit() {
     if (!glfwInit()) return;
 
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
     window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if (!window) {
         glfwTerminate();
         return;
     }
+    SetScales();
 
     glfwMakeContextCurrent(window);
+    glfwSetWindowSize(window, static_cast<int>(width * xScale), static_cast<int>(height * yScale));
     imguiInit();
 }
 

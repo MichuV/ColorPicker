@@ -10,10 +10,12 @@ using namespace std;
 class GuiBuilder {
 private:
     int width, height;
+    float xScale, yScale;
     string title, hexColor, rgbColor;
     GLFWwindow* window;
     ImGuiWindowFlags window_flags;
 
+    void SetScales();
     void imguiInit();
     void CreateMainView() const;
     void RenderFrame() const;
