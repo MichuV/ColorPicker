@@ -38,7 +38,37 @@ void GuiBuilder::CreateMainView() const {
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
     ImGui::Begin(title.c_str(), nullptr, window_flags);
-    if (ImGui::Button("Test button")) {}
+
+    if (ImGui::BeginTable("view", 2, ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_BordersInnerV,
+            ImVec2(ImGui::GetIO().DisplaySize))) {
+        ImGui::TableNextRow();
+        ImGui::TableNextColumn();
+        if (ImGui::Button("Pick a color")) {
+
+        }
+        ImGui::TableNextColumn();
+
+        if (ImGui::BeginTable("rightView", 2, ImGuiTableFlags_SizingFixedFit)) {
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text(hexColor.c_str());
+            ImGui::TableNextColumn();
+            if (ImGui::Button("Copy HEX")) {
+
+            }
+
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text(rgbColor.c_str());
+            ImGui::TableNextColumn();
+            if (ImGui::Button("Copy RGB")) {
+
+            }
+            ImGui::EndTable();
+        }
+        ImGui::EndTable();
+    }
+
     ImGui::End();
 }
 
