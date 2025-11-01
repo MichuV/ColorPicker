@@ -1,6 +1,7 @@
 #ifndef GUIBUILDER_H
 #define GUIBUILDER_H
 
+#include <Controller.h>
 #include <imgui.h>
 #include <iostream>
 #include "GLFW/glfw3.h"
@@ -11,9 +12,10 @@ class GuiBuilder {
 private:
     int width, height;
     float xScale, yScale;
-    string title, hexColor, rgbColor;
+    string title, hexColorStr, rgbColorStr;
     GLFWwindow* window;
     ImGuiWindowFlags window_flags;
+    Controller* controller;
 
     void SetScales();
     void imguiInit();
@@ -22,7 +24,7 @@ private:
     void ShutdownGui();
 
 public:
-    GuiBuilder(int width, int height);
+    GuiBuilder(int width, int height, Controller* controller);
     void WindowInit();
     void RunGui();
     ~GuiBuilder();

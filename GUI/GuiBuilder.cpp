@@ -5,10 +5,10 @@
 #include "imgui_impl_opengl3.h"
 #include "GLFW/glfw3.h"
 
-GuiBuilder::GuiBuilder(int width, int height) : width(width), height(height) {
+GuiBuilder::GuiBuilder(int width, int height, Controller* controller) : width(width), height(height), controller(controller) {
     title = "Color Picker";
-    hexColor = "#XXXXXX";
-    rgbColor = "rgb(XXX, XXX, XXX)";
+    hexColorStr = "#XXXXXX";
+    rgbColorStr = "rgb(XXX, XXX, XXX)";
     window = nullptr;
     window_flags = 0;
     xScale = 1;
@@ -43,27 +43,24 @@ void GuiBuilder::CreateMainView() const {
             ImVec2(ImGui::GetIO().DisplaySize))) {
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
-        if (ImGui::Button("Pick a color")) {
-
-        }
+        if (ImGui::Button("Pick a color"))
+            controller->PickPixel();
         ImGui::TableNextColumn();
 
         if (ImGui::BeginTable("rightView", 2, ImGuiTableFlags_SizingFixedFit)) {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
-            ImGui::Text(hexColor.c_str());
+            ImGui::Text(hexColorStr.c_str());
             ImGui::TableNextColumn();
-            if (ImGui::Button("Copy HEX")) {
-
-            }
+            if (ImGui::Button("Copy HEX"))
+                controller->CopyToClipboard(hexColorStr);
 
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
-            ImGui::Text(rgbColor.c_str());
+            ImGui::Text(rgbColorStr.c_str());
             ImGui::TableNextColumn();
-            if (ImGui::Button("Copy RGB")) {
-
-            }
+            if (ImGui::Button("Copy RGB"))
+                controller->CopyToClipboard(rgbColorStr);
             ImGui::EndTable();
         }
         ImGui::EndTable();
