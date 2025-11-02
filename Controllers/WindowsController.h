@@ -2,12 +2,12 @@
 #define WINDOWSCONTROLLER_H
 
 #include "Controller.h"
+#include <windows.h>
 
 class WindowsController final : public Controller {
 private:
-    void FreezeScreen() override;
     void ExtractColors(void* pixel) override;
-
+    HWND CreateOverlay();
 public:
     void PickPixel() override;
     void CopyToClipboard(std::string copyString) override;

@@ -1,9 +1,13 @@
 #include <iostream>
 #include "GuiBuilder.h"
+#include <sstream>
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "GLFW/glfw3.h"
+#include <iomanip>
+
+using namespace std;
 
 GuiBuilder::GuiBuilder(int width, int height, Controller* controller) : width(width), height(height), controller(controller) {
     title = "Color Picker";
@@ -22,6 +26,21 @@ void GuiBuilder::SetScales() {
 
 }
 
+void GuiBuilder::SetStrings() {
+    stringstream stream;
+    stream << "#" << uppercase << hex
+        << setw(2) << setfill('0') << controller->r
+        << setw(2) << setfill('0') << controller->g
+        << setw(2) << setfill('0') << controller->b;
+    hexColorStr = stream.str();
+
+    stream.str("");
+    stream.clear();
+    stream << dec << "rgb(" << controller->r << ", " << controller->g << ", " << controller->b << ")";
+    rgbColorStr = stream.str();
+}
+
+
 void GuiBuilder::imguiInit() {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
@@ -34,7 +53,7 @@ void GuiBuilder::imguiInit() {
     io.FontGlobalScale = xScale;
 }
 
-void GuiBuilder::CreateMainView() const {
+void GuiBuilder::CreateMainView() {
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
     ImGui::Begin(title.c_str(), nullptr, window_flags);
@@ -43,8 +62,10 @@ void GuiBuilder::CreateMainView() const {
             ImVec2(ImGui::GetIO().DisplaySize))) {
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
-        if (ImGui::Button("Pick a color"))
+        if (ImGui::Button("Pick a color")) {
             controller->PickPixel();
+            SetStrings();
+        }
         ImGui::TableNextColumn();
 
         if (ImGui::BeginTable("rightView", 2, ImGuiTableFlags_SizingFixedFit)) {

@@ -5,7 +5,6 @@
 
 class LinuxController final : public Controller {
 private:
-    void FreezeScreen() override;
     void ExtractColors(void* pixel) override;
 
 public:

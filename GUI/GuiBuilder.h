@@ -3,23 +3,22 @@
 
 #include <Controller.h>
 #include <imgui.h>
-#include <iostream>
+#include <string>
 #include "GLFW/glfw3.h"
-
-using namespace std;
 
 class GuiBuilder {
 private:
     int width, height;
     float xScale, yScale;
-    string title, hexColorStr, rgbColorStr;
+    std::string title, hexColorStr, rgbColorStr;
     GLFWwindow* window;
     ImGuiWindowFlags window_flags;
     Controller* controller;
 
     void SetScales();
+    void SetStrings();
     void imguiInit();
-    void CreateMainView() const;
+    void CreateMainView();
     void RenderFrame() const;
     void ShutdownGui();
 
