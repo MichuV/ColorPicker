@@ -66,6 +66,8 @@ void GuiBuilder::CreateMainView() {
             controller->PickPixel();
             SetStrings();
         }
+        ImVec4 pickedColor = ImVec4(controller->r / 255.0f, controller->g / 255.0f, controller->b / 255.0f, 1.0f);
+        ImGui::ColorButton("color", pickedColor, ImGuiColorEditFlags_NoTooltip);
         ImGui::TableNextColumn();
 
         if (ImGui::BeginTable("rightView", 2, ImGuiTableFlags_SizingFixedFit)) {
