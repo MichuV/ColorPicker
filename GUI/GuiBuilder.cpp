@@ -73,14 +73,14 @@ void GuiBuilder::CreateMainView() {
         if (ImGui::BeginTable("rightView", 2, ImGuiTableFlags_SizingFixedFit)) {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
-            ImGui::Text(hexColorStr.c_str());
+            ImGui::Text("%s", hexColorStr.c_str());
             ImGui::TableNextColumn();
             if (ImGui::Button("Copy HEX"))
                 controller->CopyToClipboard(hexColorStr);
 
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
-            ImGui::Text(rgbColorStr.c_str());
+            ImGui::Text("%s", rgbColorStr.c_str());
             ImGui::TableNextColumn();
             if (ImGui::Button("Copy RGB"))
                 controller->CopyToClipboard(rgbColorStr);

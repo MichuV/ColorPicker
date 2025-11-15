@@ -42,16 +42,21 @@ target_include_directories(ImguiLib PUBLIC
         ${glfw_SOURCE_DIR}/include
 )
 
-target_link_libraries(
-        ImguiLib PUBLIC
-        glfw
-        OpenGL::GL
-)
-
 add_executable(ColorPicker main.cpp
         GUI/GuiBuilder.cpp
-        Controllers/WindowsController.cpp
-        Controllers/LinuxController.cpp)
+)
+
+if(WIN32)
+    target_sources(ColorPicker PRIVATE Controllers/WindowsController.cpp)
+else()
+    target_sources(ColorPicker PRIVATE Controllers/LinuxController.cpp)
+    find_package(X11 REQUIRED)
+    target_link_libraries(ColorPicker PRIVATE ${X11_LIBRARIES}
+            glfw
+            OpenGL::GL)
+    target_include_directories(ColorPicker PRIVATE ${X11_INCLUDE_DIR})
+endif()
+
 
 target_link_libraries(
         ColorPicker PRIVATE
