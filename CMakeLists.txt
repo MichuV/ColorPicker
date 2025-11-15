@@ -3,32 +3,72 @@ project(ColorPicker)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# -- OpenGL --
+
+find_package(OpenGL REQUIRED)
+
+# -- glfw --
+
 include(FetchContent)
 FetchContent_Declare(
         glfw
         GIT_REPOSITORY https://github.com/glfw/glfw.git
-        GIT_TAG 3.3.10
+        GIT_TAG 3.4
 )
 FetchContent_MakeAvailable(glfw)
 
-add_subdirectory(imgui)
-find_package(OpenGL REQUIRED)
+# -- imgui --
+
+FetchContent_Declare(
+        imgui
+        GIT_REPOSITORY https://github.com/ocornut/imgui.git
+        GIT_TAG v1.92.4
+)
+FetchContent_MakeAvailable(imgui)
+
+add_library(ImguiLib
+        ${imgui_SOURCE_DIR}/imgui.cpp
+        ${imgui_SOURCE_DIR}/imgui_draw.cpp
+        ${imgui_SOURCE_DIR}/imgui_tables.cpp
+        ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+        ${imgui_SOURCE_DIR}/imgui_demo.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+)
+
+target_include_directories(ImguiLib PUBLIC
+        ${imgui_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}/backends
+        ${glfw_SOURCE_DIR}/include
+)
+
+target_link_libraries(
+        ImguiLib PUBLIC
+        glfw
+        OpenGL::GL
+)
 
 add_executable(ColorPicker main.cpp
         GUI/GuiBuilder.cpp
-        Controllers/WindowsController.cpp
-        Controllers/LinuxController.cpp)
+)
+
+if(WIN32)
+    target_sources(ColorPicker PRIVATE Controllers/WindowsController.cpp)
+else()
+    target_sources(ColorPicker PRIVATE Controllers/LinuxController.cpp)
+    find_package(X11 REQUIRED)
+    target_link_libraries(ColorPicker PRIVATE ${X11_LIBRARIES})
+    target_include_directories(ColorPicker PRIVATE ${X11_INCLUDE_DIR})
+endif()
+
 
 target_link_libraries(
         ColorPicker PRIVATE
-        imgui
-        glfw
-        OpenGL::GL
+        ImguiLib
 )
 
 target_include_directories(
         ColorPicker PRIVATE
         ${CMAKE_SOURCE_DIR}/GUI
         ${CMAKE_SOURCE_DIR}/Controllers
-        ${CMAKE_SOURCE_DIR}/imgui
 )
